@@ -4,29 +4,30 @@ import com.matheus.minhasfinancas.api.dto.UsuarioDto;
 import com.matheus.minhasfinancas.exceptions.ErroAutenticacao;
 import com.matheus.minhasfinancas.exceptions.RegraNegocioException;
 import com.matheus.minhasfinancas.model.entity.Usuario;
+import com.matheus.minhasfinancas.service.LancamentoService;
 import com.matheus.minhasfinancas.service.UsuarioService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.DateFormatter;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/usuarios")
+@RequiredArgsConstructor
 public class UsuarioResource {
 
-    private UsuarioService service;
+    private final UsuarioService service;
+    private  final LancamentoService lancamentoService;
 
-    public UsuarioResource(UsuarioService service){
-        this.service = service;
-    }
+
 
     @PostMapping("/autenticar")
     public ResponseEntity autenticar(@RequestBody UsuarioDto dto){
@@ -61,6 +62,16 @@ public class UsuarioResource {
         }catch (RegraNegocioException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("{id}/saldo")
+    public ResponseEntity obterSaldo(@PathVariable(value = "id") Long id){
+        Optional<Usuario> usuario = service.obterPorId(id);
+        if(!usuario.isPresent()){
+            return new ResponseEntity("Nenhum usuário encontrado par esse id!", HttpStatus.NOT_FOUND);
+        }
+        BigDecimal saldo = lancamentoService.obterSaldoPorUsuario(id);
+        return ResponseEntity.ok(saldo);
     }
 
 }
