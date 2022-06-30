@@ -1,5 +1,6 @@
 package com.matheus.minhasfinancas.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
@@ -27,6 +28,7 @@ public class Usuario {
     private String email;
 
     @Column(name = "senha")
+    @JsonIgnore
     private String senha;
 
     @Column(name = "data_cadastro")

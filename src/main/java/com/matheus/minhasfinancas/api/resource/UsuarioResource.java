@@ -56,6 +56,10 @@ public class UsuarioResource {
                 .dataCadastro(dataAtual)
                 .build();
 
+        if(usuario.getNome()==null || usuario.getNome().trim().equals("")){
+            return ResponseEntity.badRequest().body("Digite um nome válido!");
+        }
+
         try {
             Usuario usuarioSalvo = service.salvarUsuario(usuario);
             return new ResponseEntity(usuarioSalvo, HttpStatus.CREATED);
@@ -73,5 +77,6 @@ public class UsuarioResource {
         BigDecimal saldo = lancamentoService.obterSaldoPorUsuario(id);
         return ResponseEntity.ok(saldo);
     }
+
 
 }

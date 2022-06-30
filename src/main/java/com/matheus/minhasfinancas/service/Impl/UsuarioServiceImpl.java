@@ -23,6 +23,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 
 
+
     @Override
     public Usuario autenticar(String email, String senha) {
         Optional<Usuario> usuario = repository.findByEmail(email);
@@ -59,4 +60,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     public Optional<Usuario> obterPorId(Long id) {
        return repository.findById(id);
     }
+
+
+
+
 }
